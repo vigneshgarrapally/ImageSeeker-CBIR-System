@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Seeker - CBIR System</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid vh-100 d-flex flex-column justify-content-center align-items-center text-center">
+        <h1 class="mb-2">Welcome to Image Seeker</h1>
+        <p class="mb-4">Discover images easily with our advanced CBIR system.</p>
+        <p>Connecting content through visual similarity.</p>
+        
+        <div class="button-group mt-4">
+            <a href="/setup" class="btn btn-info m-2">Setup</a>
+            <a href="/sync" class="btn btn-warning m-2">Sync</a>
+            <a href="/gallery" class="btn btn-primary m-2">Gallery</a>
+            <a href="/search" class="btn btn-success m-2">Search</a>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
