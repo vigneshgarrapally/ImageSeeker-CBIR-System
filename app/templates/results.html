@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<body>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Search Results</h1>
+    <div class="row">
+        {% for path, distance in search_results %}
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+            <img src="{{ url_for('main.download_file', filepath=path) }}" class="img-thumbnail img-fluid" onclick="showImageModal(this.src)" style="object-fit: cover; height: 200px; width: 100%;" alt="Search Result">
+            <p>Distance: {{ distance }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <img src="" id="modalImage" class="img-fluid" alt="Responsive Image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showImageModal(src) {
+        var modalImage = document.getElementById('modalImage');
+        modalImage.src = src;
+        var imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
+        imageModal.show();
+    }
+</script>
+{% endblock %}
+</body>
+</html>
+

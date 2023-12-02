@@ -7,3 +7,9 @@ venv/
 *.pyd
 .Python
 gallery/
+*.index
+*.pkl
+*.pickle
+*.h5
+*.log
+query_images/

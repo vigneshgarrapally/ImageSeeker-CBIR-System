@@ -1,10 +1,11 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container">
-    <h2>Image Search</h2>
-    <p>Upload an image to search for similar images.</p>
-    <form action="/search" method="post" enctype="multipart/form-data">
-        <input type="file" name="image" required>
+<div class="container mt-4">
+    <h1 class="text-center">Image Search</h1>
+    <form id="searchForm" method="post" enctype="multipart/form-data" action="/perform_search">
+        <input type="file" name="image" accept=".jpg, .jpeg, .png, .heic" required>
+        <input type="number" name="num_results" placeholder="Number of images to retrieve" min="1" value="3">
         <button type="submit" class="btn btn-primary">Search</button>
     </form>
 </div>
