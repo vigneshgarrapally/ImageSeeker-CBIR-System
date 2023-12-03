@@ -1,8 +1,33 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container">
-    <h2>Google Account Setup</h2>
-    <p>Instructions and form to setup Google account integration.</p>
-    <!-- Add your setup form here -->
+<div class="container mt-4">
+    <h1 class="text-center">Application Setup</h1>
+    <p>Before you run gphotos_sync for the first time, you need to create your own OAuth client ID. Follow these instructions: <a target="_blank" href="https://gilesknap.github.io/gphotos-sync/main/tutorials/oauth2.html#client-id">Creating an OAuth Client ID</a>.</p>
+    <p>Once the client ID is created, download it as <code>client_secret.json</code> and save it under the application configuration directory:</p>
+    <ul>
+        <li>~/Library/Application Support/gphotos-sync/ (Mac OS X)</li>
+        <li>~/.config/gphotos-sync/ (Linux)</li>
+        <li>C:\Users\&lt;username&gt;\AppData\Local\gphotos-sync\gphotos-sync\ (Windows)</li>
+    </ul>
+    <p>After setting up the client ID, you are ready to run gphotos-sync. The first run will require a user login. See <a href="https://gilesknap.github.io/gphotos-sync/main/tutorials/login.html#login" target="_blank">User Login OAuth Flow</a>.</p>
+    <h2 class="mt-4">Syncing Google Photos</h2>
+    <p>To sync your Google Photos with the application, follow these steps:</p>
+    <ol>
+        <li>Open your command line interface (Terminal, Command Prompt, etc.).</li>
+        <li>Navigate to the root directory of the application.</li>
+        <li>Run the command <code>gphotos-sync .\gallery\</code> to start the synchronization process.</li>
+        <li>Follow any prompts in the command line to complete the sync.</li>
+    </ol>
+    <p>This will sync your Google Photos to the 'gallery' folder in the application directory.</p>
+    <!-- 
+    <button id="runSyncBtn" class="btn btn-success">Run gphotos-sync</button> -->
 </div>
+
+<!-- <script>
+
+document.getElementById('runSyncBtn').onclick = function() {
+    // Implement JavaScript to run `gphotos-sync` and handle the output
+};
+</script> -->
 {% endblock %}

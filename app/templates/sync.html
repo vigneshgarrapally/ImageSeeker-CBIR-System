@@ -1,8 +1,17 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
-    <h2>Sync Google Photos</h2>
-    <p>Functionality to sync latest images from your Google Photos.</p>
-    <!-- Add your sync logic here -->
+    <h2>Update Vector Index</h2>
+    <p>Click the button below to update the vector index with the latest images from the gallery.</p>
+    <button id="updateIndexBtn" class="btn btn-primary">Update Index</button>
+
+    <!-- Include JavaScript to handle the button click -->
+    <script>
+        document.getElementById('updateIndexBtn').onclick = async function() {
+            const response = await fetch('/update_index');
+            const data = await response.json();
+            alert(data.message);
+        };
+    </script>
 </div>
 {% endblock %}

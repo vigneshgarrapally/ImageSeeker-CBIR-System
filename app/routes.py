@@ -4,18 +4,17 @@ This module contains the routes for the Flask application.
 Attributes:
     main (Blueprint): The main Blueprint for the Flask application.
 """
-
+from threading import Thread
 from pathlib import Path
 import binascii
 import os
 import pickle
-from flask import Blueprint, render_template, current_app, send_from_directory,flash,redirect,url_for
+from flask import Blueprint, render_template, current_app, send_from_directory,flash,redirect,url_for, request, jsonify
 import faiss
 import numpy as np
 import torch
 from transformers import AutoImageProcessor, AutoModel
 from PIL import Image
-from flask import request, jsonify
 from werkzeug.utils import secure_filename
 from pillow_heif import register_heif_opener
 
@@ -48,6 +47,75 @@ def sync():
     # Logic for syncing latest images
     return render_template('sync.html')
 
+def add_vector_to_index(embedding, index):
+    #convert embedding to numpy
+    vector = embedding.detach().cpu().numpy()
+    #Convert to float32 numpy
+    vector = np.float32(vector)
+    #Normalize vector: important to avoid wrong results when searching
+    faiss.normalize_L2(vector)
+    #Add to index
+    index.add(vector)
+
+
+@main.route('/update_index')
+def update_index():
+    # Path to your images and index
+    images_path = './gallery/photos/'
+    index_path = 'vector.index'
+    pickle_path = 'images.pkl'
+    print('Syncing images from {} to index {}'.format(images_path, index_path))
+    # Check if index and pickle files exist
+    if os.path.exists(index_path) and os.path.exists(pickle_path):
+        with open(pickle_path, 'rb') as f:
+            images = pickle.load(f)
+        index = faiss.read_index(index_path)
+    else:
+        images = []
+        index = faiss.IndexFlatL2(384)  # Adjust dimensions as needed
+
+    # Process images and update the index
+    process_images_and_update_index(images, images_path, index)
+
+    # display success message
+    flash('Sync successful. Total images indexed: {}'.format(index.ntotal))
+    return redirect(url_for('main.sync'))
+
+
+def process_images_and_update_index(images, images_path, index):
+    current_images = set()
+    deleted_ids=[]
+    for root, _, files in os.walk(images_path):
+        for file in files:
+            if file.endswith(('.jpg', '.png', '.heic')):
+                image_path = os.path.join(root, file)
+                current_images.add(image_path)
+                if image_path not in images:
+                    img = Image.open(image_path).convert('RGB')
+                    with torch.no_grad():
+                        inputs = processor(images=img, return_tensors="pt").to(device)
+                        outputs = model(**inputs)
+                    features = outputs.last_hidden_state.mean(dim=1)
+                    add_vector_to_index(features, index)
+                    print('Added image {} to index'.format(image_path))
+                    # add image to images list
+                    images.append(image_path)
+    deleted_images = set(images) - current_images
+
+    if deleted_images:
+        deleted_ids = [images.index(image) for image in deleted_images]
+        print('Deleting {} images from index'.format(len(deleted_ids)))
+        index.remove_ids(np.array(deleted_ids))
+
+    images[:] = [image for image in images if image not in deleted_images]
+    # Check if the number of images in the index matches the number of images
+    assert len(images) == index.ntotal
+    # Save the updated index and image list
+    faiss.write_index(index, 'vector.index')
+    with open('images.pkl', 'wb') as f:
+        pickle.dump(images, f)
+    print('Index updated successfully')
+
 def encode(filepath):
     """
     Encodes the given filepath into a hexadecimal string.
@@ -72,8 +140,9 @@ def download_file(filepath):
         str: The file content if found, or "File not found" with status code 404.
     """
     filepath_decoded = binascii.unhexlify(filepath.encode('utf-8')).decode()
-    gallery_root = Path(__file__).resolve().parent.parent / 'gallery'
-    file_path = gallery_root / filepath_decoded
+    # gallery_root = Path(__file__).resolve().parent.parent / 'gallery'
+    file_path = Path.cwd() / filepath_decoded
+    print(file_path)
     if not file_path.is_file():
         return "File not found", 404
     return send_from_directory(str(file_path.parent), file_path.name, as_attachment=False)
