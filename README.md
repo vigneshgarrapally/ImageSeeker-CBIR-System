@@ -4,6 +4,8 @@
 
 ImageSeeker is a Flask-based web application designed for a robust Content-Based Image Retrieval (CBIR) system. It uses advanced machine learning models to search and retrieve similar images from a local database, providing an intuitive way to explore image galleries.
 
+![Alt text](image.png)
+
 ## Features
 
 - Sync images from Google Photos using gphotos-sync.
