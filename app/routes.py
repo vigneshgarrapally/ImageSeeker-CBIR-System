@@ -141,12 +141,30 @@ def download_file(filepath):
     """
     filepath_decoded = binascii.unhexlify(filepath.encode('utf-8')).decode()
     # gallery_root = Path(__file__).resolve().parent.parent / 'gallery'
-    file_path = Path.cwd() / filepath_decoded
+    file_path = Path.cwd() / 'gallery' / filepath_decoded
     print(file_path)
     if not file_path.is_file():
         return "File not found", 404
     return send_from_directory(str(file_path.parent), file_path.name, as_attachment=False)
 
+@main.route('/cdn2/<path:filepath>')
+def download_file2(filepath):
+    """
+    Download a file from the specified filepath.
+
+    Args:
+        filepath (str): The path of the file to be downloaded.
+
+    Returns:
+        str: The file content if found, or "File not found" with status code 404.
+    """
+    filepath_decoded = binascii.unhexlify(filepath.encode('utf-8')).decode()
+    # gallery_root = Path(__file__).resolve().parent.parent / 'gallery'
+    file_path = Path.cwd() / filepath_decoded
+    print(file_path)
+    if not file_path.is_file():
+        return "File not found", 404
+    return send_from_directory(str(file_path.parent), file_path.name, as_attachment=False)
 
 @main.route('/gallery')
 def gallery():

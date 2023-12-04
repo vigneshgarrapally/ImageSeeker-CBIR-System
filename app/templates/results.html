@@ -9,7 +9,7 @@
     <div class="row">
         {% for path, distance in search_results %}
         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-            <img src="{{ url_for('main.download_file', filepath=path) }}" class="img-thumbnail img-fluid" onclick="showImageModal(this.src)" style="object-fit: cover; height: 200px; width: 100%;" alt="Search Result">
+            <img src="{{ url_for('main.download_file2', filepath=path) }}" class="img-thumbnail img-fluid" onclick="showImageModal(this.src)" style="object-fit: cover; height: 200px; width: 100%;" alt="Search Result">
             <p>Distance: {{ distance }}</p>
         </div>
         {% endfor %}

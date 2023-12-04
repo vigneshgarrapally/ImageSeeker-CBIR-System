@@ -2,18 +2,22 @@
 
 ## Project Overview
 
-This Content-Based Image Retrieval (CBIR) System is designed for digital image galleries, enabling users to search and retrieve images based on content similarity. The system allows users to upload an image as a query, which is then processed to find and display similar images from the database.
+ImageSeeker is a Flask-based web application designed for a robust Content-Based Image Retrieval (CBIR) system. It uses advanced machine learning models to search and retrieve similar images from a local database, providing an intuitive way to explore image galleries.
 
 ## Features
 
-- **Image Upload and Preprocessing**: Users can upload query images in various formats and from online services like Google Photos.
-- **Content-Based Image Search**: The system uses deep learning or traditional computer vision methods to extract features from the uploaded image and compares them with images in the database to identify similar images.
-- **Metadata Display**: Displays metadata such as title, date, and source alongside the images for better context.
-- **Technology Stack**:
-  - Feature Extraction and Matching: OpenCV, Pytorch
-  - Indexing: Facebook AI Similarity Search
-  - Backend: Python (Flask)
-  - Frontend: HTML, CSS, JavaScript
+- Sync images from Google Photos using gphotos-sync.
+- Extract features from images using facebook/dinov2-small model.
+- Index images using FAISS for efficient similarity search.
+- Search functionality to find similar images.
+- Gallery view to display indexed images.
+
+## Technology Stack:
+
+- Feature Extraction and Matching: OpenCV, Pytorch
+- Indexing: Facebook AI Similarity Search
+- Backend: Python (Flask)
+- Frontend: HTML, CSS, JavaScript
 
 ## Getting Started
 
@@ -23,26 +27,27 @@ This Content-Based Image Retrieval (CBIR) System is designed for digital image g
 - Flask
 - OpenCV
 - Pytorch
-- Facebook AI Similarity Search
+- Transformers
+- FAISS (Facebook AI Similarity Search)
 
 ### Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone [repository URL]
+   git clone https://github.com/aniruth5510/ImageSeeker-CBIR-System.git
    ```
 
 2. Navigate to the project directory:
 
    ```bash
-   cd [project directory]
+   cd ImageSeeker-CBIR-System/
    ```
 
 3. Install required packages:
 
    ```bash
-   pip install -r requirements.txt
+   conda env create -f faiss.yaml
    ```
 
 ### Running the Application
@@ -50,18 +55,29 @@ This Content-Based Image Retrieval (CBIR) System is designed for digital image g
 1. Start the Flask server:
 
    ```bash
-   python app.py
+   python run.py
    ```
 
 2. Access the application in a web browser at `http://localhost:5000`.
 
-## Usage
+#### First-time Setup
 
-- Upload an image using the provided interface.
-- The system will process the image and display similar images from the database along with their metadata.
+1. **OAuth Client ID:**
+   - Follow the [Creating an OAuth Client ID](https://gilesknap.github.io/gphotos-sync/main/tutorials/oauth2.html#client-id) guide.
+   - Save the `client_secret.json` in the appropriate configuration directory.
 
-## Acknowledgments
+2. **Sync Images:**
+   - Run `gphotos-sync .\gallery\` in the command line to sync images from Google Photos.
 
-- OpenCV contributors
-- Pytorch community
-- Facebook AI Similarity Search team
+#### Usage
+
+- **Home Page**: Access at `http://localhost:5000/`.
+- **Setup Page**: Instructions for setting up OAuth Client ID.
+- **Sync Page**: Sync images and update the FAISS index.
+- **Gallery Page**: View the synced image gallery.
+- **Search Page**: Upload an image and specify the number of similar images to retrieve.
+
+#### Updating the FAISS Index
+
+- Images are automatically added to the FAISS index during the sync process.
+- The index is updated with new images, and deleted images are removed to keep the index current.
